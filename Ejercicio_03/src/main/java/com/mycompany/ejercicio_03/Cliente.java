@@ -22,33 +22,34 @@ public class Cliente {
              DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
              Scanner scanner = new Scanner(System.in)) {
 
-            scanner.useDelimiter("\n");
+            scanner.useDelimiter("\n"); 
 
-            System.out.println(entrada.readUTF().trim());
-            salida.writeUTF(scanner.next());
+            // Lee mensajes del servidor, los imprime y envía las respuestas
+            System.out.println(entrada.readUTF().trim());  
+            salida.writeUTF(scanner.next()); 
 
-            System.out.println(entrada.readUTF().trim());
-            salida.writeUTF(scanner.next());
+            System.out.println(entrada.readUTF().trim()); 
+            salida.writeUTF(scanner.next()); 
 
-            if (entrada.readBoolean()) {
+            if (entrada.readBoolean()) {  // Verifica si el servidor confirmó las credenciales
                 ejecutarComandos(entrada, salida, scanner);
             } else {
                 System.out.println("Credenciales incorrectas.");
             }
         } catch (IOException e) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, "Error en la comunicación", e);
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, "Error en la comunicación", e); 
         }
     }
 
     private static void ejecutarComandos(DataInputStream entrada, DataOutputStream salida, Scanner scanner) throws IOException {
         boolean activo = true;
         while (activo) {
-            System.out.println(entrada.readUTF().trim());
-            String comando = scanner.next();
-            salida.writeUTF(comando);
+            System.out.println(entrada.readUTF().trim());  
+            String comando = scanner.next();  // Lee el comando ingresado por el usuario.
+            salida.writeUTF(comando);  
 
             switch (comando) {
-                case "ls":
+                case "ls": 
                     listarArchivos(entrada);
                     break;
                 case "get":
@@ -65,21 +66,21 @@ public class Cliente {
     }
 
     private static void listarArchivos(DataInputStream entrada) throws IOException {
-        int cantidad = entrada.readInt();
+        int cantidad = entrada.readInt();  // Lee la cantidad de archivos.
         for (int i = 0; i < cantidad; i++) {
-            System.out.println(entrada.readUTF().trim());
+            System.out.println(entrada.readUTF().trim());  // Muestra los nombres de los archivos recibidos.
         }
     }
 
     private static void obtenerArchivo(DataInputStream entrada, DataOutputStream salida, Scanner scanner) throws IOException {
         System.out.println("Introduce la ruta del archivo a mostrar:");
-        salida.writeUTF(scanner.next());
+        salida.writeUTF(scanner.next());  
 
-        if (entrada.readBoolean()) {
-            int tamaño = entrada.readInt();
+        if (entrada.readBoolean()) {  // Verifica si el archivo existe en el servidor.
+            int tamaño = entrada.readInt();  // Lee el tamaño del archivo.
             byte[] datos = new byte[tamaño];
-            entrada.readFully(datos);
-            System.out.println(new String(datos));
+            entrada.readFully(datos); 
+            System.out.println(new String(datos));  // Muestra el contenido del archivo.
         } else {
             System.out.println("Error, el archivo no existe.");
         }

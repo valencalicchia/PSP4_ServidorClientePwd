@@ -30,28 +30,27 @@ public class Ejercicio_02 extends Thread {
         try (DataInputStream in = new DataInputStream(clienteSocket.getInputStream());
              DataOutputStream out = new DataOutputStream(clienteSocket.getOutputStream())) {
 
-            String rutaArchivo = in.readUTF();
-
+            String rutaArchivo = in.readUTF();  
             File archivo = new File(rutaArchivo);
             
-            if (archivo.exists() && archivo.isFile()) {
-                out.writeBoolean(true); 
-                byte[] contenido = leerArchivo(archivo);
+            // Verifica si el archivo existe y es un archivo válido
+            if (archivo.exists() && archivo.isFile()) {  
+                out.writeBoolean(true);  // Informa al cliente que el archivo existe
+                byte[] contenido = leerArchivo(archivo); 
 
-                out.writeInt(contenido.length);
-                out.write(contenido);
-
-                System.out.println("Archivo enviado: " + archivo.getName());
+                out.writeInt(contenido.length);  
+                out.write(contenido);  // Envía el contenido del archivo al cliente
+                System.out.println("Archivo enviado: " + archivo.getName()); 
             } else {
-                out.writeBoolean(false);
-                System.out.println("Archivo no encontrado: " + rutaArchivo);
+                out.writeBoolean(false); 
+                System.out.println("Archivo no encontrado: " + rutaArchivo);  
             }
 
         } catch (IOException ex) {
             Logger.getLogger(Ejercicio_02.class.getName()).log(Level.SEVERE, "Error en la comunicación con el cliente", ex);
         } finally {
             try {
-                clienteSocket.close();
+                clienteSocket.close(); 
             } catch (IOException ex) {
                 Logger.getLogger(Ejercicio_02.class.getName()).log(Level.SEVERE, "Error al cerrar el socket del cliente", ex);
             }
@@ -65,8 +64,8 @@ public class Ejercicio_02 extends Thread {
             byte[] buffer = new byte[1024];
             int bytesLeidos;
 
-            while ((bytesLeidos = fis.read(buffer)) != -1) {
-                bos.write(buffer, 0, bytesLeidos);
+            while ((bytesLeidos = fis.read(buffer)) != -1) {  // Lee el archivo hasta el final
+                bos.write(buffer, 0, bytesLeidos);  // Escribe los bytes leídos en el buffer de salida
             }
 
             return bos.toByteArray();

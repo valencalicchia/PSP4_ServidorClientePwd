@@ -14,22 +14,23 @@ import java.util.logging.*;
  * @author valen
  */
 public class Servidor {
-    private static final int PUERTO = 1500;
+    private static final int PUERTO = 1500;  
 
     public static void main(String[] args) {
-        try (ServerSocket servidor = new ServerSocket(PUERTO)) {
-            System.out.println("Servidor iniciado en el puerto " + PUERTO);
+        try (ServerSocket servidor = new ServerSocket(PUERTO)) { 
+            System.out.println("Servidor iniciado en el puerto " + PUERTO); 
 
+            // Bucle infinito
             while (true) {
-                Socket clienteSocket = servidor.accept();
-                System.out.println("Cliente conectado.");
+                Socket clienteSocket = servidor.accept();  
+                System.out.println("Cliente conectado.");  // Mensaje que indica que un cliente se ha conectado
 
+                // Crea un nuevo hilo y lo inicia
                 Ejercicio_03 manejador = new Ejercicio_03(clienteSocket);
-                manejador.start();
+                manejador.start();  
             }
-
         } catch (IOException ex) {
-            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, "Error al iniciar el servidor", ex);
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, "Error al iniciar el servidor", ex);  // Manejo de excepciones si ocurre un error al crear el socket del servidor.
         }
     }
 }

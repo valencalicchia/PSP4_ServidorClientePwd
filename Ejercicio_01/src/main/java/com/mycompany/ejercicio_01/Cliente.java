@@ -16,43 +16,51 @@ import java.util.logging.*;
  * @author valen
  */
 public class Cliente {
- public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 2000);
-             DataInputStream input = new DataInputStream(socket.getInputStream());
-             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-             Scanner scanner = new Scanner(System.in)) {
 
-            boolean salir = false;
+    public static void main(String[] args) {
+        // Establece una conexión con el servidor en localhost y puerto 2000.
+        try (Socket socket = new Socket("localhost", 2000); DataInputStream input = new DataInputStream(socket.getInputStream()); DataOutputStream output = new DataOutputStream(socket.getOutputStream()); Scanner scanner = new Scanner(System.in)) {  // Utiliza try-with-resources para cerrar recursos automáticamente.
 
-            while (!salir) {
+            boolean salir = false;  // Bandera para controlar el ciclo de ejecución.
+
+            while (!salir) {  // El ciclo continuará hasta que el servidor indique que se debe salir.
+                // Lee el mensaje enviado por el servidor.
                 String mensajeServidor = input.readUTF();
-                System.out.println(mensajeServidor);
+                System.out.println(mensajeServidor);  // Muestra el mensaje del servidor en consola.
 
                 int numero;
-                while (true) {
-                output.writeUTF("Escribe un número entre 0 y 100:");
-                    if (scanner.hasNextInt()) {
-                        numero = scanner.nextInt();
-                        scanner.nextLine();
+                while (true) {  // Bucle para solicitar un número válido entre 0 y 100.
+                    output.writeUTF("Escribe un número entre 0 y 100:");  // Solicita al cliente un número.
 
+                    // Verifica si el usuario ha ingresado un número entero.
+                    if (scanner.hasNextInt()) {
+                        numero = scanner.nextInt();  // Lee el número ingresado.
+                        scanner.nextLine();  // Limpia el buffer del scanner.
+
+                        // Verifica que el número esté en el rango adecuado (0 a 100).
                         if (numero >= 0 && numero <= 100) {
-                            break;
+                            break;  // Si es válido, sale del ciclo.
                         } else {
                             System.out.println("Número fuera del rango. Por favor, ingresa un número entre 0 y 100.");
                         }
                     } else {
                         System.out.println("Entrada no válida. Por favor, ingresa un número entero.");
-                        scanner.nextLine();
+                        scanner.nextLine();  // Limpia el buffer del scanner si la entrada no es válida.
                     }
                 }
-                output.writeInt(numero);
-                mensajeServidor = input.readUTF();
-                System.out.println(mensajeServidor);
 
+                output.writeInt(numero);  // Envía el número al servidor.
+
+                // Lee el mensaje del servidor tras recibir el número.
+                mensajeServidor = input.readUTF();
+                System.out.println(mensajeServidor);  // Muestra el mensaje recibido del servidor.
+
+                // Lee la respuesta del servidor para saber si debe continuar o salir.
                 salir = input.readBoolean();
             }
 
         } catch (IOException ex) {
+            // Si ocurre un error de conexión, lo captura y lo imprime.
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, "Error en la conexión con el servidor", ex);
         }
     }
