@@ -74,7 +74,7 @@ public class Ejercicio_03 extends Thread {
     }
 
     private void listarArchivos(DataOutputStream salida) throws IOException {
-        File directorio = new File("./ficheros");
+        File directorio = new File("./ejemplo");
         File[] archivos = directorio.listFiles();
         
         if (archivos == null) {
@@ -92,7 +92,7 @@ public class Ejercicio_03 extends Thread {
 
     private void enviarArchivo(DataInputStream entrada, DataOutputStream salida) throws IOException {
         String ruta = entrada.readUTF().trim();
-        File archivo = new File("./ficheros/" + ruta);
+        File archivo = new File("./ejemplo/" + ruta);
         
         if (archivo.exists() && archivo.isFile()) {
             salida.writeBoolean(true);
